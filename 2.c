@@ -30,14 +30,17 @@ int f2 (struct X *p, char *s) {
     else
         len = strlen(s);
     printf("len=%d\n",len);
-    for (int i = 0; i<len ; i+=2){
+    for (int i = 1; i<len ; i+=2){
+        if (!(p->a[i-1] == s[i-1])){
+            t++;
+        }
         if (!(p->a[i] == s[i])){
             t++;
         }
-        if ((i != len - 1) || (len%2 == 0)){
-            if(!(p->a[i+1] == s[i+1])){
-                t++;
-            }
+    }
+    if (len%2 != 0){
+        if(!(p->a[len - 1] == s[len - 1])){
+            t++;
         }
     }
     return p->b + t;
@@ -46,8 +49,8 @@ int f2 (struct X *p, char *s) {
 int main(){
     struct X * x = malloc(sizeof(struct X));
     char * ss = malloc(256*sizeof(char));
-    strcpy(x->a,"holamama");
-    strcpy(ss,  "holamama");
+    strcpy(x->a,"abcd");
+    strcpy(ss,  "1234");
     x->b = 0;
     printf("Resultado f(): %d\n",f(x,ss));
     printf("Resultado f2(): %d\n",f2(x,ss));
