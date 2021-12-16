@@ -25,27 +25,81 @@ int f (struct X *p, char *s) {
 int f2 (struct X *p, char *s) {
     int t = 0;
     int len = 0;
-    int size_s = strlen(s);
-    int size_pa = strlen(p->a);
-    char cadena_s [size_s + 1];
-    char cadena_pa [size_pa + 1];
-    strcpy(cadena_s,s);
-    strcpy(cadena_pa,p->a);
-    if( size_s > size_pa)
-        len = size_pa;
-    else
-        len = size_s;
+    if( strlen(s) > strlen(p->a)){
+        len = strlen(p->a);
+    }else{
+        len = strlen(s);
+    }
     /*Aplicamos loop unrolling */
     for (int i = 1; i<len ; i+=2){
-        if (!(cadena_pa[i-1] == cadena_s[i-1])){
+        if (!(p->a[i-1] == s[i-1])){
             t++;
         }
-        if (!(cadena_pa[i] == cadena_s[i])){
-            t++;
+        if (!(p->a[i] == s[i])){
+            t++; 
         }
     }
     if (len%2 != 0){
-        if(!(cadena_pa[len - 1] == cadena_s[len - 1])){
+        if(!(p->a[len - 1] == s[len - 1])){
+            t++;
+        }
+    }
+    return p->b + t;
+}
+
+int f3 (struct X *p, char *s) {
+    int t = 0;
+    int len = 0;
+    if( strlen(s) > strlen(p->a)){
+        len = strlen(p->a);
+    }else{
+        len = strlen(s);
+    }
+    /*Aplicamos loop unrolling */
+    int i = 2;
+    for (i; i<len ; i+=3){
+        if (!(p->a[i-2] == s[i-2])){
+            t++;
+        }
+        if (!(p->a[i-1] == s[i-1])){
+            t++;
+        }
+        if (!(p->a[i] == s[i])){
+            t++;
+        }
+    }
+    if(i < len){
+        for( i ; i < len ; i++){
+            if (!(p->a[i] == s[i])){
+            t++;
+            }
+        }
+    }
+    return p->b + t;
+    
+}
+
+int f4 (struct X *p, char *s) {
+    int t = 0;
+    int len = 0;
+    int len_s = strlen(s);
+    int len_pa = strlen(p->a);
+    if( len_s > len_pa){
+        len = len_pa;
+    }else{
+        len = len_s;
+    }
+    /*Aplicamos loop unrolling */
+    for (int i = 1; i<len ; i+=2){
+        if (!(p->a[i-1] == s[i-1])){
+            t++;
+        }
+        if (!(p->a[i] == s[i])){
+            t++; 
+        }
+    }
+    if (len%2 != 0){
+        if(!(p->a[len - 1] == s[len - 1])){
             t++;
         }
     }
@@ -66,20 +120,31 @@ int main(){
     strcpy(ss,  cadena_local);
     x->b = 0;
     double time = 0;
-    clock_t start1 = clock();
+    clock_t start = clock();
     printf("resultado f():%d",f(x,ss));
-    clock_t end1 = clock();
-    time = (double)(end1 - start1)/ CLOCKS_PER_SEC;
+    clock_t end = clock();
+    time = (double)(end - start)/ CLOCKS_PER_SEC;
     printf("tiempo de f = %f segundos\n",time);
     time = 0;
-    clock_t start2 = clock();
+    start = clock();
     printf("resultado f():%d",f2(x,ss));
-    clock_t end2 = clock();
-    time = (double) (end2 - start2)/ CLOCKS_PER_SEC;
+    end = clock();
+    time = (double) (end - start)/ CLOCKS_PER_SEC;
     printf("tiempo de f2 = %f segundos\n",time);
+    time = 0;
+    start = clock();
+    printf("resultado f():%d",f3(x,ss));
+    end = clock();
+    time = (double) (end - start)/ CLOCKS_PER_SEC;
+    printf("tiempo de f3 = %f segundos\n",time);
+    time = 0;
+    start = clock();
+    printf("resultado f():%d",f4(x,ss));
+    end = clock();
+    time = (double) (end - start)/ CLOCKS_PER_SEC;
+    printf("tiempo de f4 = %f segundos\n",time);
     //printf("Press Enter to Continue\n"); 
     //while(getchar() != '\n'); 
-
     free(x);
     free(ss);
     return 0;
